@@ -1,4 +1,4 @@
-# UmbracoMongoDbClient
+# Setup procedure
 
 The `appsettings.json` file should be given a connection string to your MongoDB database
 ```json
