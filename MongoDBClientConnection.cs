@@ -8,7 +8,7 @@ namespace UmbracoMongoDbClient
 		private static MongoClient MongoClient;
 		private static string _databaseNamePrefix;
 
-		public static void Setup(X509Certificate2 cert, string connectionString, string databaseNamePrefix)
+		public static void Initialize(X509Certificate2 cert, string connectionString, string databaseNamePrefix)
 		{
 			var settings = MongoClientSettings.FromConnectionString(connectionString);
 
@@ -21,7 +21,7 @@ namespace UmbracoMongoDbClient
 			_databaseNamePrefix = databaseNamePrefix;
 		}
 
-		public static void Setup(string connectionStringWithPassword, string databaseNamePrefix)
+		public static void Initialize(string connectionStringWithPassword, string databaseNamePrefix)
 		{
 			var settings = MongoClientSettings.FromConnectionString(connectionStringWithPassword);
 			settings.ServerApi = new ServerApi(ServerApiVersion.V1);
