@@ -39,7 +39,7 @@ namespace UmbracoMongoDbClient
 			collection.InsertOne(new InitializationDTO()
 			{
 				Id = Guid.NewGuid().ToString(),
-				ValidUntilUtc = DateTime.UtcNow
+				InitializedAtUtc = DateTime.UtcNow
 			});
 		}
 

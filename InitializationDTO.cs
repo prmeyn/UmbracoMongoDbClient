@@ -6,6 +6,6 @@ namespace UmbracoMongoDbClient
 	{
 		[BsonId]
 		public string Id { get; set; }
-		public DateTimeOffset ValidUntilUtc { get; set; }
+		public DateTimeOffset InitializedAtUtc { get; set; }
 	}
 }
