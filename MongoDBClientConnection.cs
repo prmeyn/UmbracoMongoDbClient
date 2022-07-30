@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
 namespace UmbracoMongoDbClient
@@ -19,6 +20,7 @@ namespace UmbracoMongoDbClient
 
 			MongoClient = new MongoClient(settings);
 			_databaseNamePrefix = databaseNamePrefix;
+			RegisterInitialization();
 		}
 
 		public static void Initialize(string connectionStringWithPassword, string databaseNamePrefix)
@@ -27,6 +29,18 @@ namespace UmbracoMongoDbClient
 			settings.ServerApi = new ServerApi(ServerApiVersion.V1);
 			MongoClient = new MongoClient(settings);
 			_databaseNamePrefix = databaseNamePrefix;
+			RegisterInitialization();
+		}
+
+		private static void RegisterInitialization()
+		{
+			var database = GetDatabase(MethodBase.GetCurrentMethod().DeclaringType.Name);
+			var collection = database.GetCollection<InitializationDTO>("Initializations");
+			collection.InsertOne(new InitializationDTO()
+			{
+				Id = Guid.NewGuid().ToString(),
+				ValidUntilUtc = DateTime.UtcNow
+			});
 		}
 
 		public static IMongoDatabase GetDatabase(string dBName) => MongoClient.GetDatabase($"{_databaseNamePrefix}-{dBName}");
