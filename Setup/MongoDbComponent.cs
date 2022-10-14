@@ -26,7 +26,7 @@ namespace UmbracoMongoDbClient.Setup
 			stopWatch.Start();
 			MongoDBClientConnection.Initialize(
 				connectionStringWithPassword: _config.GetUmbracoConnectionString("mongoDBConnectionStringWithPassword"),
-				databaseNamePrefix: _env.IsProduction() ? _env.EnvironmentName : $"{_env.EnvironmentName}_{Environment.MachineName}");
+				databaseNamePrefix: _env.IsEnvironment("Local") ? Environment.MachineName : _env.EnvironmentName);
 			stopWatch.Stop();
 			// Get the elapsed time as a TimeSpan value.
 			TimeSpan ts = stopWatch.Elapsed;
