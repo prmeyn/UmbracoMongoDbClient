@@ -23,13 +23,35 @@ namespace UmbracoMongoDbClient
 			RegisterInitialization();
 		}
 
-		public static void Initialize(string connectionStringWithPassword, string databaseNamePrefix)
+		public static void Initialize(string connectionStringWithPassword, string environmentName, bool isProduction)
 		{
 			var settings = MongoClientSettings.FromConnectionString(connectionStringWithPassword);
 			settings.ServerApi = new ServerApi(ServerApiVersion.V1);
 			MongoClient = new MongoClient(settings);
-			_databaseNamePrefix = databaseNamePrefix;
+			_databaseNamePrefix = isProduction ? "" : getDatabaseNamePrefix(environmentName, Environment.MachineName);
 			RegisterInitialization();
+		}
+
+		private static string getDatabaseNamePrefix(string environmentName, string machineName)
+		{
+			var database = MongoClient.GetDatabase("DatabaseNamePrefixes");
+			var collection = database.GetCollection<DatabaseNamePrefixDTO>("Servers");
+			var id = $"{environmentName}-{machineName}";
+			var x = collection.Find(
+						filter: Builders<DatabaseNamePrefixDTO>.Filter.Eq("_id", id)
+					)?.ToListAsync()?.Result?.FirstOrDefault();
+			if (x == null)
+			{
+				var databaseNamePrefix = $"{environmentName}{collection.CountDocuments(filter: _ => true)}";
+				collection.InsertOne(new DatabaseNamePrefixDTO()
+				{
+					ServerId = id,
+					DatabaseNamePrefix = databaseNamePrefix,
+					InitializedAtUtc = DateTime.UtcNow
+				});
+				return databaseNamePrefix;
+			}
+			return x.DatabaseNamePrefix;
 		}
 
 		private static void RegisterInitialization()
