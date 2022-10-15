@@ -65,6 +65,6 @@ namespace UmbracoMongoDbClient
 			});
 		}
 
-		public static IMongoDatabase GetDatabase(string dBName) => MongoClient.GetDatabase($"{_databaseNamePrefix}-{dBName}");
+		public static IMongoDatabase GetDatabase(string dBName) => MongoClient.GetDatabase(string.IsNullOrWhiteSpace(_databaseNamePrefix) ? dBName :$"{_databaseNamePrefix}-{dBName}");
 	}
 }
