@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Umbraco.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 
 namespace UmbracoMongoDbClient.Setup
 {
@@ -22,12 +23,44 @@ namespace UmbracoMongoDbClient.Setup
 
 		public void Initialize()
 		{
+			var mongoDBConnectionStringWithPassword = _config.GetUmbracoConnectionString("mongoDBConnectionStringWithPassword");
 			var stopWatch = new Stopwatch();
 			stopWatch.Start();
-			MongoDBClientConnection.Initialize(
-				connectionStringWithPassword: _config.GetUmbracoConnectionString("mongoDBConnectionStringWithPassword"),
-				environmentName:_env.EnvironmentName,
+			if (!string.IsNullOrWhiteSpace(mongoDBConnectionStringWithPassword))
+			{
+				MongoDBClientConnection.Initialize(
+				connectionString: mongoDBConnectionStringWithPassword,
+				environmentName: _env.EnvironmentName,
 				isProduction: _env.IsProduction());
+			}
+			else 
+			{
+				var mongoDbCredentials = "MongoDbCredentials";
+				var certificateFilePathWithName = _config.GetValue<string>($"{mongoDbCredentials}:CertificateFilePathWithName");
+				var connectionString = _config.GetValue<string>($"{mongoDbCredentials}:ConnectionString");
+
+				if (!string.IsNullOrWhiteSpace(certificateFilePathWithName))
+				{
+					var certificatePassword = _config.GetValue<string>($"{mongoDbCredentials}:CertificatePassword");
+					MongoDBClientConnection.Initialize(
+						cert: string.IsNullOrWhiteSpace(certificatePassword) ? new X509Certificate2(certificateFilePathWithName) : new X509Certificate2(certificateFilePathWithName, certificatePassword),
+						connectionString: connectionString,
+						environmentName: _env.EnvironmentName,
+						isProduction: _env.IsProduction());
+				}
+				else if (!string.IsNullOrWhiteSpace(connectionString))
+				{
+					MongoDBClientConnection.Initialize(
+						connectionString: connectionString,
+						environmentName: _env.EnvironmentName,
+						isProduction: _env.IsProduction());
+				}
+				else
+				{
+					throw new Exception("Unable to figure out MongoDB connection configurations!!");
+				}
+			}
+			
 			stopWatch.Stop();
 			// Get the elapsed time as a TimeSpan value.
 			TimeSpan ts = stopWatch.Elapsed;

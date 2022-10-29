@@ -9,7 +9,7 @@ namespace UmbracoMongoDbClient
 		private static MongoClient MongoClient;
 		private static string _databaseNamePrefix;
 
-		public static void Initialize(X509Certificate2 cert, string connectionString, string databaseNamePrefix)
+		public static void Initialize(X509Certificate2 cert, string connectionString, string environmentName, bool isProduction)
 		{
 			var settings = MongoClientSettings.FromConnectionString(connectionString);
 
@@ -19,13 +19,13 @@ namespace UmbracoMongoDbClient
 			};
 
 			MongoClient = new MongoClient(settings);
-			_databaseNamePrefix = databaseNamePrefix;
+			_databaseNamePrefix = isProduction ? "" : getDatabaseNamePrefix(environmentName, Environment.MachineName);
 			RegisterInitialization();
 		}
 
-		public static void Initialize(string connectionStringWithPassword, string environmentName, bool isProduction)
+		public static void Initialize(string connectionString, string environmentName, bool isProduction)
 		{
-			var settings = MongoClientSettings.FromConnectionString(connectionStringWithPassword);
+			var settings = MongoClientSettings.FromConnectionString(connectionString);
 			settings.ServerApi = new ServerApi(ServerApiVersion.V1);
 			MongoClient = new MongoClient(settings);
 			_databaseNamePrefix = isProduction ? "" : getDatabaseNamePrefix(environmentName, Environment.MachineName);
@@ -37,10 +37,10 @@ namespace UmbracoMongoDbClient
 			var database = MongoClient.GetDatabase("DatabaseNamePrefixes");
 			var collection = database.GetCollection<DatabaseNamePrefixDTO>("Servers");
 			var id = $"{environmentName}-{machineName}";
-			var x = collection.Find(
+			var databaseNamePrefixDTO = collection.Find(
 						filter: Builders<DatabaseNamePrefixDTO>.Filter.Eq("_id", id)
 					)?.ToListAsync()?.Result?.FirstOrDefault();
-			if (x == null)
+			if (databaseNamePrefixDTO == null)
 			{
 				var databaseNamePrefix = $"{environmentName}{collection.CountDocuments(filter: _ => true)}";
 				collection.InsertOne(new DatabaseNamePrefixDTO()
@@ -51,7 +51,7 @@ namespace UmbracoMongoDbClient
 				});
 				return databaseNamePrefix;
 			}
-			return x.DatabaseNamePrefix;
+			return databaseNamePrefixDTO.DatabaseNamePrefix;
 		}
 
 		private static void RegisterInitialization()
