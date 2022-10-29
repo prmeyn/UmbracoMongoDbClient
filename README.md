@@ -3,9 +3,11 @@
 The `appsettings.json` file should be given a connection string to your MongoDB databases
 ```json
 {
-	"ConnectionStrings": {
-		"mongoDBConnectionStringWithPassword": "mongodb+srv://some:password@somecluster.bulb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-	}
+	"MongoDbCredentials": {
+	    "CertificateFilePathWithName": "<optional Certificate file path with name [pfx file]>",
+	    "CertificatePassword": "<optional Certificate password>",
+	    "ConnectionString": "<mandatory> mongodb+srv://cluster0.fyu.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
+	  }
 }
 ```
 
