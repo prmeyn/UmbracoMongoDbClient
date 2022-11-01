@@ -16,3 +16,4 @@ Sample code
 var database = MongoDBClientConnection.GetDatabase("YouDatabaseName");
 var collection = database.GetCollection<T>("YourCollectionName"); // of type T
 ```
+For more examples on how to Insert, Modify your data, check the MongoDB official documentation: https://mongodb.github.io/mongo-csharp-driver/2.18/getting_started/quick_tour/
