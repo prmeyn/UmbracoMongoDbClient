@@ -5,8 +5,8 @@ namespace UmbracoMongoDbClient
 	public class DatabaseNamePrefixDTO
 	{
 		[BsonId]
-		public string ServerId { get; set; }
-		public DateTimeOffset InitializedAtUtc { get; set; }
-		public string DatabaseNamePrefix { get; set; }
+		public required string ServerId { get; set; }
+		public required DateTimeOffset InitializedAtUtc { get; set; }
+		public required string DatabaseNamePrefix { get; set; }
 	}
 }

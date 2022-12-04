@@ -5,7 +5,7 @@ namespace UmbracoMongoDbClient
 	public class InitializationDTO
 	{
 		[BsonId]
-		public string Id { get; set; }
-		public DateTimeOffset InitializedAtUtc { get; set; }
+		public required string Id { get; set; }
+		public required DateTimeOffset InitializedAtUtc { get; set; }
 	}
 }
