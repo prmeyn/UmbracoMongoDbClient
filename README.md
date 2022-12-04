@@ -3,9 +3,11 @@
 The `appsettings.json` file should be given a connection string to your MongoDB databases
 ```json
 {
-	"ConnectionStrings": {
-		"mongoDBConnectionStringWithPassword": "mongodb+srv://some:password@somecluster.bulb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-	}
+	"MongoDbCredentials": {
+	    "CertificateFilePathWithName": "<optional Certificate file path with name [pfx file]>",
+	    "CertificatePassword": "<optional Certificate password>",
+	    "ConnectionString": "<mandatory> mongodb+srv://cluster0.fyu.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
+	  }
 }
 ```
 
@@ -14,3 +16,4 @@ Sample code
 var database = MongoDBClientConnection.GetDatabase("YouDatabaseName");
 var collection = database.GetCollection<T>("YourCollectionName"); // of type T
 ```
+For more examples on how to Insert, Modify your data, check the MongoDB official documentation: https://mongodb.github.io/mongo-csharp-driver/2.18/getting_started/quick_tour/
