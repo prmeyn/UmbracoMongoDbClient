@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Umbraco.Cms.Core.Composing;
+using Microsoft.AspNetCore.Hosting;
+using Umbraco.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
-using Umbraco.Cms.Core.Composing;
-using Umbraco.Extensions;
 
 namespace UmbracoMongoDbClient.Setup
 {
-	public sealed class MongoDbComponent : IComponent
+	public class MongoDbComponent : IComponent
 	{
 		private readonly IHostingEnvironment _env;
 		private readonly IConfiguration _config;

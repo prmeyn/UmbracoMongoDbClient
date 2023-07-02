@@ -12,7 +12,7 @@ namespace UmbracoMongoDbClient
 		public static void Initialize(X509Certificate2 cert, string connectionString, string environmentName, bool isProduction)
 		{
 			var settings = MongoClientSettings.FromConnectionString(connectionString);
-			settings.ReplicaSetName = "rs0";
+
 			settings.SslSettings = new SslSettings
 			{
 				ClientCertificates = new List<X509Certificate>() { cert }
@@ -27,7 +27,6 @@ namespace UmbracoMongoDbClient
 		{
 			var settings = MongoClientSettings.FromConnectionString(connectionString);
 			settings.ServerApi = new ServerApi(ServerApiVersion.V1);
-			settings.ReplicaSetName = "rs0";
 			MongoClient = new MongoClient(settings);
 			_databaseNamePrefix = isProduction ? "" : getDatabaseNamePrefix(environmentName, Environment.MachineName);
 			RegisterInitialization();
