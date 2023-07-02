@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace UmbracoMongoDbClient.Setup
 {
-	public class MongoDbComponent : IComponent
+	public sealed class MongoDbComponent : IComponent
 	{
 		private readonly IHostingEnvironment _env;
 		private readonly IConfiguration _config;

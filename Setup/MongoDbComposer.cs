@@ -4,7 +4,7 @@ using Umbraco.Cms.Core.DependencyInjection;
 namespace UmbracoMongoDbClient.Setup
 {
 
-	public class MongoDbComposer : IComposer
+	public sealed class MongoDbComposer : IComposer
 	{
 		public void Compose(IUmbracoBuilder builder)
 		{

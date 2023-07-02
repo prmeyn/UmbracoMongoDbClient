@@ -2,7 +2,7 @@
 
 namespace UmbracoMongoDbClient
 {
-	public class InitializationDTO
+	public sealed class InitializationDTO
 	{
 		[BsonId]
 		public required string Id { get; set; }
